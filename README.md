@@ -139,13 +139,11 @@ import {
   id = "sgr-0b379f87680a2a333"
 }
 # End
-
------------------
-
-
+```
+```
 [root@ip-172-30-2-182 sg2]#cd sg3
 [root@ip-172-30-2-182 sg2]#terragrunt plan --generate-config-out=out.tf
-
+```
 You should see Plan: 6 to import, 0 to add, 0 to change, 0 to destroy.
 ```
 
