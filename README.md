@@ -1,9 +1,9 @@
 # import_sg_terragrunt
 This is a demo repository for importing and managing the AWS security groups.
-**Purpose**
+##**Purpose**
 Lot of security groups may have been created using Clickops. it makes more sense to stop using clickops and bring these resources under Terraform control. Terragrunt is wrapper around Terraform and provides many benefits (individual resource state management and keeping code DRY primarily and many other benefits.)
 
-**Scenario below:**
+##**Scenario below:**
 We will import 2 security groups and its connected CIDR egress/ingress rules under terragrunt control. Once imported, we will also update the CIDR rules in the existing security groups, modify other attributes.  After that, we will also add new security groups and rules using Terragrunt. No more clickops.
 If someone created more security groups again, use the same process to import back to Terragrunt.
 
