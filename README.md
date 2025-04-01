@@ -25,6 +25,7 @@ on linux_amd64
 Terragrunt uses one atomic directory and only one terragrunt.hcl in it to mange the resources. Actual public module will be stored in the ./modules folder.  We are not covering the terragrunt layout details here.
 In this case, we have sg3 folder and ./terragrunt.hcl file in it.
 
+```
 [root@ip-172-30-2-182 sg2]# cat sg3/terrgrunt.hcl
 include "root" {
   path = find_in_parent_folders("root.hcl")
@@ -36,10 +37,11 @@ terraform {
 
 inputs = {
 }
-
+```
 
 #Below details are for storing the state file in the AWS s3 bucket and lock file in the AWS dynamodb table.
 #Note how we are using aws credentials file in the terragrung config file.  You may use a role instead if needed.  I use the AWS us-east-1 region.
+```
 [root@ip-172-30-2-182 terragrunt]# cat root.hcl
 remote_state {
   backend = "s3"
@@ -89,7 +91,7 @@ aws_secret_access_key = 22222BIIbPAHcqE3zXVjVVN7w6gTEUDu+hUcuq
 ├── sg.tf
 
 0 directories, 1 file
-
+```
 
 Explanation for entries in the ../../modules/general_import/sg.tf file (below)
 ----------------------------------------
@@ -105,7 +107,7 @@ use "aws_security_group".  Subgroup "this" can be anything but must be unique wi
 Similary to find the CIDR rule module or resource go to https://registry.terraform.io/providers/hashicorp/aws/latest/doc search for "aws securty group rule". You will end up at https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule which clearly shows NOT to use that resource but instead use aws_vpc_security_group_egress_rule and aws_vpc_security_group_inress_rule resource. search for these resources and  pickup the example usage resource name that is "aws_vpc_security_group_egress_rule" and "aws_vpc_security_group_inress_rule".
 
 "id" is the security group id (sg-xxxx) and "security group rule id". (sgr-xxx)
-
+```
 cat ../../modules/general_import/sg.tf
 # security group 1 and its egress and ingress to import
 import {
@@ -142,6 +144,7 @@ import {
 [root@ip-172-30-2-182 sg2]#terragrunt plan --generate-config-out=out.tf
 
 You should see Plan: 6 to import, 0 to add, 0 to change, 0 to destroy.
+```
 
 This seems correct. When we run plan, we see all the 6 resources to be imported.
 
@@ -153,11 +156,13 @@ Note:  if you decide to modify the above sg.tf file, make sure to delete out.tf 
 
 
 perform apply.
+```
 [root@ip-172-30-2-182 sg2]#terragrunt plan
-
+```
 Apply should succeed.  Apply complete! Resources: 6 imported, 0 added, 0 changed, 0 destroyed.
 
 Verify import using terragrunt state list.
+```
 #terragrunt state list
 aws_security_group.this_1
 aws_security_group.this_2
@@ -197,7 +202,7 @@ resource "aws_security_group" "this_1" {
             ipv6_cidr_blocks = []
             prefix_list_ids  = []
             protocol         = "tcp"
-
+```
 
 Story 1 is completed.  Import is successful and resources are now under terragrunt control.
 
