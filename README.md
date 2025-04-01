@@ -63,7 +63,8 @@ remote_state {
 
   }
 }
-
+```
+```
 generate "provider" {
   path = "provider.tf"
   if_exists = "overwrite_terragrunt"
@@ -74,12 +75,14 @@ provider "aws" {
 }
 EOF
 }
-
+```
+```
 [root@ip-172-30-2-182 terragrunt]# cat /root/.aws/credentials
 [default]
 aws_access_key_id = 1111YEYSMFUTTCQDQFP6
 aws_secret_access_key = 22222BIIbPAHcqE3zXVjVVN7w6gTEUDu+hUcuq
-
+```
+```
 [root@ip-172-30-2-182 sg3]# tree
 .
 ├── terragrunt.hcl
