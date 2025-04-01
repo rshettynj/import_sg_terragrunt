@@ -8,18 +8,19 @@ We will import 2 security groups and its connected CIDR egress/ingress rules und
 If someone created more security groups again, use the same process to import back to Terragrunt.
 
 
-**STORY 1**
-**Importing security groups and CIDR rules.**
+#**STORY 1**
+##**Importing security groups and CIDR rules.**
 
 Use a desktop or an ec2 instance where Terragrunt/terraform is installed.  I use an AWS Amazon linux instance.  It has permission to manage resources from my personal AWS account using AWS IAM role. This setup detail is not covered here.
 
+```
 [root@ip-172-30-2-182 sg3]# terragrunt --version
 terragrunt version v0.75.4
 
 [root@ip-172-30-2-182 modules]# terraform --version
 Terraform v1.11.0
 on linux_amd64
-
+```
 
 Terragrunt uses one atomic directory and only one terragrunt.hcl in it to mange the resources. Actual public module will be stored in the ./modules folder.  We are not covering the terragrunt layout details here.
 In this case, we have sg3 folder and ./terragrunt.hcl file in it.
