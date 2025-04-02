@@ -314,6 +314,8 @@ var.secgroup
 var.secgroup.security_groups.securitygroup1.rules.egress
 { for index, inst in var.secgroup.security_groups.securitygroup1.rules.egress : index => inst }
 { for index, inst in var.secgroup.security_groups.securitygroup1.rules.ingress : index => inst }
+{ for index, inst in var.secgroup.security_groups : index => inst.rules.egress }
+{ for index, inst in var.secgroup.security_groups : index => inst.rules.ingress }
 ```
 
 
