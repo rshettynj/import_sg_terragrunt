@@ -209,7 +209,105 @@ Story 1 is completed.  Import is successful and resources are now under terragru
 
 
 **STORY 2**
-**Updating CIDR egress and ingress from terragrunt.**
+USING Terraform or Terragrunt console.
+
+We can use built in console command for evaluating a variable. This is useful for complex variables where we use for_each on list of objects to get the values.  (think of security group rules.)
+
+Steps to run terraform console:
+
+create a folder called ./modules/console and place below file as main.tf
+
+```
+variable "secgroup" {
+  description = "egress"
+  type        = map(map(map(map(list(object({
+    cidr_ipv4 = string
+    description = string
+    from_port = number
+    to_port = number
+    ip_protocol = string
+  }))))))
+  default = {
+    security_groups = {
+     securitygroup1 = {
+      rules = {
+       egress = [
+        {
+        cidr_ipv4 = "10.0.0.0/8"
+        description = "testing"
+        from_port = 80
+        to_port = 80
+        ip_protocol = "tcp"
+        },
+        {
+        cidr_ipv4 = "10.0.0.0/24"
+        description = "testing"
+        from_port = 8081
+        to_port = 8081
+        ip_protocol = "tcp"
+        },
+        {
+        cidr_ipv4 = "10.0.0.0/8"
+        description = "testing"
+        from_port = 8080
+        to_port = 8080
+        ip_protocol = "tcp"
+        }
+       ],
+      ingress = [
+      ]
+    }
+   }
+  }
+ }
+}
+```
+
+Above file can be a good example of how we want to structure the security group and CIDR layout to manage the security group and rules objects.
+
+We can define any number of security groups with any number of rules (egress and ingress) in each.
+```
+  default = {
+    security_groups = {
+     securitygroup1 = {
+      rules = {
+       egress = [
+        {},
+        {},
+        {},
+       ],
+      ingress = [
+        {},
+        {},
+      ]
+    }
+   },
+    securitygroup2 = {
+      rules = {
+       egress = [
+        {},
+        {},
+        {},
+       ],
+      ingress = [
+        {},
+        {},
+      ]
+    }
+   },
+     securitygroup3 = {
+      rules = {
+       egress = [
+        {},
+        {},
+        {},
+       ],
+      ingress = [
+        {},
+        {},
+      ]
+```
+
 
 
 
