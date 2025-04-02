@@ -140,7 +140,7 @@ import {
 }
 # End
 ```
-```
+
 [root@ip-172-30-2-182 sg2]#cd sg3
 [root@ip-172-30-2-182 sg2]#terragrunt plan --generate-config-out=out.tf
 ```
