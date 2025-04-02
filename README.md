@@ -308,11 +308,13 @@ We can define any number of security groups with any number of rules (egress and
       ]
 ```
 
-launch "terraform console"
->var.secgroup
->var.secgroup.security_groups.securitygroup1.rules.egress
->{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.egress : index => inst }
->{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.ingress : index => inst }
+launch "terraform console" and insert below commands.
+```
+var.secgroup
+var.secgroup.security_groups.securitygroup1.rules.egress
+{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.egress : index => inst }
+{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.ingress : index => inst }
+```
 
 
 
