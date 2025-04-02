@@ -158,7 +158,7 @@ Note:  if you decide to modify the above sg.tf file, make sure to delete out.tf 
 
 perform apply.
 ```
-[root@ip-172-30-2-182 sg2]#terragrunt plan
+[root@ip-172-30-2-182 sg2]#terragrunt apply
 ```
 Apply should succeed.  Apply complete! Resources: 6 imported, 0 added, 0 changed, 0 destroyed.
 
