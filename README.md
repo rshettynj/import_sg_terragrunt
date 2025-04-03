@@ -265,48 +265,6 @@ variable "secgroup" {
 
 Above file can be a good example of how we want to structure the security group and CIDR layout to manage the security group and rules objects.
 
-We can define any number of security groups with any number of rules (egress and ingress) in each.
-```
-  default = {
-    security_groups = {
-     securitygroup1 = {
-      rules = {
-       egress = [
-        {},
-        {},
-        {},
-       ],
-      ingress = [
-        {},
-        {},
-      ]
-    }
-   },
-    securitygroup2 = {
-      rules = {
-       egress = [
-        {},
-        {},
-        {},
-       ],
-      ingress = [
-        {},
-        {},
-      ]
-    }
-   },
-     securitygroup3 = {
-      rules = {
-       egress = [
-        {},
-        {},
-        {},
-       ],
-      ingress = [
-        {},
-        {},
-      ]
-```
 
 launch "terraform console" and insert below commands.
 ```
@@ -318,7 +276,7 @@ var.secgroup.security_groups.securitygroup1.rules.egress
 { for index, inst in var.secgroup.security_groups : index => inst.rules.ingress }
 ```
 
-Here is the sample main.tf that works for two security groups with CIDR rules.
+Here is another sample of  main.tf that works for two security groups with CIDR rules and that has security group id and description fields in addition to the above.
 ```
 variable "secgroup" {
   description = "security group"
