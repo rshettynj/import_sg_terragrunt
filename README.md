@@ -318,6 +318,123 @@ var.secgroup.security_groups.securitygroup1.rules.egress
 { for index, inst in var.secgroup.security_groups : index => inst.rules.ingress }
 ```
 
+Here is the sample main.tf that works for two security groups with CIDR rules.
+```
+variable "secgroup" {
+  description = "security group"
+  type = object({
+    security_groups = list(object({
+      security_group_id = string
+      description = string
+    rules = object({
+      egress = list(object({
+        cidr_ipv4 = string
+        description = string
+        from_port = number
+        to_port = number
+        ip_protocol = string
+      }))
+      ingress = list(object({
+        cidr_ipv4 = string
+        description = string
+        from_port = number
+        to_port = number
+        ip_protocol = string
+      }))
+    })
+  }))
+})
+
+default = {
+      security_groups = [{
+        security_group_id = "sg-xxx"
+        description       = "lb-sg"
+        rules = {
+          egress = [
+            {
+              cidr_ipv4   = "10.0.0.0/8"
+              description = "testing"
+              from_port   = 80
+              to_port     = 80
+              ip_protocol = "tcp"
+            },
+            {
+              cidr_ipv4   = "10.0.0.0/24"
+              description = "testing"
+              from_port   = 8081
+              to_port     = 8081
+              ip_protocol = "tcp"
+            },
+            {
+              cidr_ipv4   = "10.0.0.0/8"
+              description = "testing"
+              from_port   = 8080
+              to_port     = 8080
+              ip_protocol = "tcp"
+            }
+          ]
+          ingress = [
+            {
+              cidr_ipv4   = "10.0.0.0/24"
+              description = "testing"
+              from_port   = 8081
+              to_port     = 8081
+              ip_protocol = "tcp"
+            }
+          ]
+       }
+     },
+     {
+        security_group_id = "sg-yyy"
+        description       = "lb-sg"
+        rules = {
+          egress = [
+            {
+              cidr_ipv4   = "10.0.0.0/8"
+              description = "testing2"
+              from_port   = 80
+              to_port     = 80
+              ip_protocol = "tcp"
+            },
+            {
+              cidr_ipv4   = "10.0.0.0/24"
+              description = "testing2"
+              from_port   = 8081
+              to_port     = 8081
+              ip_protocol = "tcp"
+            },
+            {
+              cidr_ipv4   = "10.0.0.0/8"
+              description = "testing2"
+              from_port   = 8080
+              to_port     = 8080
+              ip_protocol = "tcp"
+            }
+          ]
+          ingress = [
+            {
+              cidr_ipv4   = "10.0.0.0/24"
+              description = "testing2"
+              from_port   = 8081
+              to_port     = 8081
+              ip_protocol = "tcp"
+            }
+          ]
+       }
+     }]
+}
+}
+```
+
+Run commands below to do basic checking if you get the proper attribute and values.
+
+```
+var.secgroup
+```
+
+```
+var.secgroup.security_groups[1]
+```
 
 
 
