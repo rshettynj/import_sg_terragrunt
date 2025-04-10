@@ -66,4 +66,199 @@ EOT
   }
 }
 
+** To create multiple policies using terragrunt **
+
+cat terragrunt.hcl
+[root@ip-172-30-2-182 iam-policy]# cat terragrunt.hcl
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source = "../../modules/terraform-aws-iam/modules/iam-policy"
+}
+
+inputs = {
+  _myListofObjects = [
+{
+  create_policy = true
+  name = "my-terraform-test-policy"
+  path = "/"
+  description = "testing terraform for iam policy"
+  policy = <<EOT1
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:ListAllMyBuckets"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+
+}
+EOT1
+  tags = {
+    name = "testing 2"
+    purpose = "demo iam 2"
+}
+
+},
+
+#Next list item
+{
+  create_policy = true
+  name = "my-terraform-test-policy-2"
+  path = "/"
+  description = "testing terraform for iam policy-2"
+  policy = <<EOT2
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:ListAllMyBuckets"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOT2
+  tags = {
+    name = "testing 2"
+    purpose = "demo iam"
+  }
+}
+#list item End
+,
+#Next list item
+{
+  create_policy = true
+  name = "my-terraform-test-policy-3"
+  path = "/"
+  description = "testing terraform for iam policy-3a"
+  policy = <<EOT2
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:ListAllMyBuckets"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "ec2:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOT2
+  tags = {
+    name = "testing 3a"
+    purpose = "demo iam"
+  }
+}
+#list item End
+
+
+]
+}
+
+
+cat main.tf (modified !!!)
+resource "aws_iam_policy" "policy" {
+  #count = var.create_policy ? 1 : 0
+
+/*
+  name        = var.name
+  name_prefix = var.name_prefix
+  path        = var.path
+  description = var.description
+  policy = var.policy
+  tags = var.tags
+*/
+for_each = { for index, inst in var._myListofObjects : index => inst }
+  name        = each.value.name
+  #name_prefix = each.value.name_prefix
+  path        = each.value.path
+  description = each.value.description
+  policy      = each.value.policy
+  #tags        = each.value.tags
+}
+
+
+What is possible now?
+
+With for_each enabled and terragrunt.hcl is now sending list of objects, we can manage (create, delete selectively and update selectively) any of the IAM policies listed in the 
+terragrunt.hcl file.
+
+example:
+[root@ip-172-30-2-182 iam-policy]# terragrunt state list
+aws_iam_policy.policy["0"]
+aws_iam_policy.policy["1"]
+aws_iam_policy.policy["2"]
+
+terragrunt state show 
+terragrunt destroy -target='aws_iam_policy.policy["2"]'
+
+[root@ip-172-30-2-182 iam-policy]# terragrunt state show 'aws_iam_policy.policy["2"]'
+# aws_iam_policy.policy["2"]:
+resource "aws_iam_policy" "policy" {
+    arn              = "arn:aws:iam::559994907943:policy/my-terraform-test-policy-3"
+    attachment_count = 0
+    description      = "testing terraform for iam policy-3a"
+    id               = "arn:aws:iam::559994907943:policy/my-terraform-test-policy-3"
+    name             = "my-terraform-test-policy-3"
+    name_prefix      = null
+    path             = "/"
+    policy           = jsonencode(
+        {
+            Statement = [
+                {
+                    Action   = [
+                        "s3:ListAllMyBuckets",
+                    ]
+                    Effect   = "Allow"
+                    Resource = "*"
+                },
+                {
+                    Action   = [
+                        "ec2:*",
+                    ]
+                    Effect   = "Allow"
+                    Resource = "*"
+                },
+            ]
+            Version   = "2012-10-17"
+        }
+    )
+    policy_id        = "ANPAYEYSMFUTWMWACAGIL"
+    tags             = {}
+    tags_all         = {}
+}
+
+below command will only delete the third IAM resource.
+[root@ip-172-30-2-182 iam-policy]# terragrunt destroy -target='aws_iam_policy.policy["2"]'
 
