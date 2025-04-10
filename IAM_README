@@ -208,6 +208,18 @@ for_each = { for index, inst in var._myListofObjects : index => inst }
   #tags        = each.value.tags
 }
 
+cat variables.tf
+variable "_myListofObjects" {
+  description = "List of IAM policies to create"
+  type = list(object({
+    create_policy = bool
+    name = string
+    path = string
+    description = string
+    policy = string
+  }))
+}
+
 
 What is possible now?
 
@@ -224,7 +236,6 @@ terragrunt state show
 terragrunt destroy -target='aws_iam_policy.policy["2"]'
 
 [root@ip-172-30-2-182 iam-policy]# terragrunt state show 'aws_iam_policy.policy["2"]'
-# aws_iam_policy.policy["2"]:
 resource "aws_iam_policy" "policy" {
     arn              = "arn:aws:iam::559994907943:policy/my-terraform-test-policy-3"
     attachment_count = 0
