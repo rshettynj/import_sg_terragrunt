@@ -1,5 +1,5 @@
 
-# IAM policies and role(roles) creation using Terragrunt and Terraform.  
+# IAM policies and role creation using Terragrunt and Terraform.  
 
 **To create an IAM role using terragrunt **
 ```
