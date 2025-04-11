@@ -104,16 +104,20 @@ aws_secret_access_key = 22222BIIbPAHcqE3zXVjVVN7w6gTEUDu+hUcuq
 
 Explanation for entries in the ../../modules/general_import terragrunt.hcl file.
 ----------------------------------------
-Note: Created a folder called "general_import" and store the below content in a new file called sg.tf.  it can be any name ending with .tf.
+Note: Created a folder called "general_import" and store the below content in a new file called sg.tf.  it can be any name ending with .tf file extension.
 List out all the security groups and rules (egress/ingress) to be imported as shown.
 
-We are using CIDR rules import separate from security group import is because "CIDR rules" are considered separate resources in the Terraform documentation. (AWS VPC rules are different than AWS VPC security groups. each has its own published module or resource block.
-Some resources are published as modules and some as just resources.  
-Hint: go to https://registry.terraform.io/providers/hashicorp/aws/latest/docs  search for "aws security group" and you will get https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws/latest
-click on source code link and open main.tf file and look for the resource name which is "resource "aws_security_group" "this"   
-use "aws_security_group".  Subgroup "this" can be anything but must be unique within a tf file. So we use this_1
+We are using CIDR rules import (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule and https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) separate from security group import (https://github.com/terraform-aws-modules/terraform-aws-security-group) is because "CIDR rules" are considered separate resources in the Terraform documentation.
 
-Similary to find the CIDR rule module or resource go to https://registry.terraform.io/providers/hashicorp/aws/latest/doc search for "aws securty group rule". You will end up at https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule which clearly shows NOT to use that resource but instead use aws_vpc_security_group_egress_rule and aws_vpc_security_group_inress_rule resource. search for these resources and  pickup the example usage resource name that is "aws_vpc_security_group_egress_rule" and "aws_vpc_security_group_inress_rule".
+<img width="359" alt="image" src="https://github.com/user-attachments/assets/86ff270a-e7e7-4d73-a60b-1af6b9ee6193" />
+
+Note: Terraform in most cases, will provide a module. For some resources, they may just provide resource blocks only. (no modules.)
+
+Hint on how to search for the modules or resources at terraform.io: go to https://registry.terraform.io/providers/hashicorp/aws/latest/docs  search for "aws security group" and you will get https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws/latest
+click on source code link and open main.tf file and look for the resource name which is "resource "aws_security_group" "this"   
+use "aws_security_group".  Subgroup "this" can be anything but must be unique within a tf file. We are using this_1 in the below examples so we can import multiple SGs and CIDRs.
+
+Similary to find the CIDR rule module or resource go to https://registry.terraform.io/providers/hashicorp/aws/latest/doc search for "aws securty group rule". You will end up at https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule which clearly shows NOT to use that resource but instead use aws_vpc_security_group_egress_rule and aws_vpc_security_group_inress_rule resource. search for these resources and pickup the example usage resource name that is "aws_vpc_security_group_egress_rule" and "aws_vpc_security_group_inress_rule".
 
 "id" is the security group id (sg-xxxx) and "security group rule id". (sgr-xxx)
 ```
@@ -147,28 +151,28 @@ import {
 # End
 ```
 
-[root@ip-172-30-2-182 sg2]#cd sg3
-[root@ip-172-30-2-182 sg2]#terragrunt plan --generate-config-out=out.tf
+#Below command is doing the actual import.
+[root@ip-172-30-2-182 sg3]#terragrunt plan --generate-config-out=out.tf
 ```
 You should see Plan: 6 to import, 0 to add, 0 to change, 0 to destroy.
 ```
 
 This seems correct. When we run plan, we see all the 6 resources to be imported.
 
---generate-config-out=out.tf  will create a out.tf file in the terraform cache folder (example: .terragrunt-cache folder)
+--generate-config-out=out.tf  will create a out.tf file in the terraform cache folder (example: .terragrunt-cache folder under sg3)
 
 out.tf file has the current resource attributes fetched from AWS and ready for import.
 
-Note:  if you decide to modify the above sg.tf file, make sure to delete out.tf file and re-run the plan command.
+Note:  if you decide to modify the above sg.tf file, make sure to delete out.tf file from cache (unix find command to find and delete the out.tf file.) and re-run the plan command.
 
 
-perform apply.
-```
-[root@ip-172-30-2-182 sg2]#terragrunt apply
+#perform apply.
+[root@ip-172-30-2-182 sg3]#terragrunt apply
+
 ```
 Apply should succeed.  Apply complete! Resources: 6 imported, 0 added, 0 changed, 0 destroyed.
 
-Verify import using terragrunt state list.
+### Verify import using **terragrunt state list**.
 ```
 #terragrunt state list
 aws_security_group.this_1
@@ -214,8 +218,8 @@ resource "aws_security_group" "this_1" {
 Story 1 is completed.  Import is successful and resources are now under terragrunt control.
 
 
-**STORY 2**
-USING Terraform or Terragrunt console.
+
+#USING Terraform or Terragrunt console.
 
 We can use built in console command for evaluating a variable. This is useful for complex variables where we use for_each on list of objects to get the values.  (think of security group rules.)
 
