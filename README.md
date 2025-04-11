@@ -3,7 +3,7 @@
 Copyright: https://sceneloc8.com/location/chandni-chowk/
 
 # import_sg_terragrunt  (AWS security group and CIDR rules import.)
-This code and documentation explains how to "import" AWS security group/s (SG) with their CIDR entries (egress and ingress.)
+This code (publishing soon.) and documentation explains how to "import" AWS security group/s (SG) with their CIDR entries (egress and ingress.)
 Same code can be used to add/update new SG resources as well.
 
 ##**Why we need to import security groups?**
@@ -14,7 +14,6 @@ Terragrunt can be invoked to bring the SGs under Terraform control and use Terra
 ##**Scenario below:**
 We will import two existing AWS security groups and its corresponding CIDR egress/ingress rules under Terraform control. Once imported, we will perform CRUD operations on SG and CIDRs. 
 Based on how it goes, you can decide to import over SG's and CIDRs in some batches under Terraform control. Stop using Clickops and always use the Terraform input fields to manage the resources.
-
 
 ##**Importing security groups and CIDR rules.**
 
