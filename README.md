@@ -406,5 +406,7 @@ Note:  it is always required to enter the "default" value for the variable for c
 >var.secgroup.security_groups[1]
 ```
 
+**Credits**:
+My friends at Hertz Corp and Kranthi Gamini.
 
 
