@@ -152,11 +152,10 @@ import {
 ```
 
 #Below command is doing the actual import.
+```
 [root@ip-172-30-2-182 sg3]#terragrunt plan --generate-config-out=out.tf
 ```
 You should see Plan: 6 to import, 0 to add, 0 to change, 0 to destroy.
-```
-
 This seems correct. When we run plan, we see all the 6 resources to be imported.
 
 --generate-config-out=out.tf  will create a out.tf file in the terraform cache folder (example: .terragrunt-cache folder under sg3)
@@ -167,6 +166,7 @@ Note:  if you decide to modify the above sg.tf file, make sure to delete out.tf 
 
 
 #perform apply.
+```
 [root@ip-172-30-2-182 sg3]#terragrunt apply
 
 ```
@@ -215,7 +215,7 @@ resource "aws_security_group" "this_1" {
             protocol         = "tcp"
 ```
 
-Story 1 is completed.  Import is successful and resources are now under terragrunt control.
+**Import is successful and resources are now under terragrunt control!**
 
 
 
