@@ -1,5 +1,6 @@
 
 ![image](https://github.com/user-attachments/assets/07152f12-fb92-4f51-890f-27dc446c3921)
+Copyright: https://sceneloc8.com/location/chandni-chowk/
 
 # import_sg_terragrunt  (AWS security group and CIDR rules import.)
 This code and documentation explains how to "import" AWS security group/s (SG) with their CIDR entries (egress and ingress.)
