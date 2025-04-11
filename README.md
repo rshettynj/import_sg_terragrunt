@@ -44,7 +44,7 @@ inputs = {
 ```
 
 #Below details are for storing the state file in the AWS s3 bucket and lock file in the AWS dynamodb table.
-#Note how we are using aws credentials file in the terragrung config file.  You may use a role instead if needed.  I use the AWS us-east-1 region.
+#Note how we are using aws credentials file in the Terragrunt config file.  You may use a role instead if needed.  I use the AWS us-east-1 region.
 ```
 [root@ip-172-30-2-182 terragrunt]# cat root.hcl
 remote_state {
@@ -56,19 +56,21 @@ remote_state {
   }
 
   config = {
-    bucket = "xxxx374nsddhg3223gg2yyy"
 
+#bucket name below
+    bucket = "xxxx374nsddhg3223gg2yyy"
     key            = "${path_relative_to_include()}/tofu.tfstate"
+#Only using us-east-1. You can use variable if needed.
     region         = "us-east-1"
     profile         = "default"
     shared_credentials_file = "/root/.aws/credentials"
     encrypt        = true
+#dynamodb table name below
     dynamodb_table = "dddd38787sdksbkdsdffff"
 
   }
 }
-```
-```
+
 generate "provider" {
   path = "provider.tf"
   if_exists = "overwrite_terragrunt"
@@ -92,7 +94,7 @@ aws_secret_access_key = 22222BIIbPAHcqE3zXVjVVN7w6gTEUDu+hUcuq
 ├── terragrunt.hcl
 
 0 directories, 1 file
-[root@ip-172-30-2-182 sg3]# cd ../../modules/gene*
+[root@ip-172-30-2-182 sg3]# cd ../../modules/general_import
 [root@ip-172-30-2-182 general_import]# tree
 .
 ├── sg.tf
@@ -100,10 +102,10 @@ aws_secret_access_key = 22222BIIbPAHcqE3zXVjVVN7w6gTEUDu+hUcuq
 0 directories, 1 file
 ```
 
-Explanation for entries in the ../../modules/general_import/sg.tf file (below)
+Explanation for entries in the ../../modules/general_import terragrunt.hcl file.
 ----------------------------------------
-Note: I create a folder called "general_import" and store the below content in the file called sg.tf.  it can be any name ending with .tf.
-List out all the security groups and rules (egress/ingress) to be imported as shown.  You could even import 100's of security groups!!
+Note: Created a folder called "general_import" and store the below content in a new file called sg.tf.  it can be any name ending with .tf.
+List out all the security groups and rules (egress/ingress) to be imported as shown.
 
 We are using CIDR rules import separate from security group import is because "CIDR rules" are considered separate resources in the Terraform documentation. (AWS VPC rules are different than AWS VPC security groups. each has its own published module or resource block.
 Some resources are published as modules and some as just resources.  
