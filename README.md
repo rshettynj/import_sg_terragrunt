@@ -219,13 +219,14 @@ resource "aws_security_group" "this_1" {
 
 
 
-#USING Terraform or Terragrunt console.
+**#What is Terraform or Terragrunt "console"?**
 
-We can use built in console command for evaluating a variable. This is useful for complex variables where we use for_each on list of objects to get the values.  (think of security group rules.)
+We can use terraform natively available console command for evaluating variables. This is useful for complex variables like for_each (multiple for_each for example.) on say list of objects to get the values.  (think of security group rules that are list of objects)
+console is read only and you cannot mess up state file by using console.
 
-Steps to run terraform console:
+_Steps to run terraform console:_
 
-create a folder called ./modules/console and place below file as main.tf
+create a folder called **./modules/console **and place below file as **main.tf**
 
 ```
 variable "secgroup" {
@@ -276,14 +277,14 @@ variable "secgroup" {
 Above file can be a good example of how we want to structure the security group and CIDR layout to manage the security group and rules objects.
 
 
-launch "terraform console" and insert below commands.
+launch "terraform console" and type below commands and observe the results.  This will be useful to understand what is going on and tweak the loops as needed.
 ```
-var.secgroup
-var.secgroup.security_groups.securitygroup1.rules.egress
-{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.egress : index => inst }
-{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.ingress : index => inst }
-{ for index, inst in var.secgroup.security_groups : index => inst.rules.egress }
-{ for index, inst in var.secgroup.security_groups : index => inst.rules.ingress }
+>var.secgroup
+>var.secgroup.security_groups.securitygroup1.rules.egress
+>{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.egress : index => inst }
+>{ for index, inst in var.secgroup.security_groups.securitygroup1.rules.ingress : index => inst }
+>{ for index, inst in var.secgroup.security_groups : index => inst.rules.egress }
+>{ for index, inst in var.secgroup.security_groups : index => inst.rules.ingress }
 ```
 
 Here is another sample of  main.tf that works for two security groups with CIDR rules and that has security group id and description fields in addition to the above.
@@ -395,13 +396,11 @@ default = {
 ```
 
 Run commands below to do basic checking if you get the proper attribute and values.
+Note:  it is always required to enter the "default" value for the variable for console testing.
 
 ```
-var.secgroup
-```
-
-```
-var.secgroup.security_groups[1]
+>var.secgroup
+>var.secgroup.security_groups[1]
 ```
 
 
