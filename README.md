@@ -1,4 +1,4 @@
-# import_sg_terragrunt
+# import_sg_terragrunt  (AWS security group and CIDR rules import.)
 This code and documentation explains how to "import" AWS security group/s (SG) with their CIDR entries (egress and ingress.)
 Same code can be used to add/update new SG resources as well.
 
