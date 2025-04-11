@@ -1,17 +1,21 @@
 # import_sg_terragrunt
-This is a demo repository for importing and managing the AWS security groups.
-##**Purpose**
-Lot of security groups may have been created using Clickops. it makes more sense to stop using clickops and bring these resources under Terraform control. Terragrunt is wrapper around Terraform and provides many benefits (individual resource state management and keeping code DRY primarily and many other benefits.)
+This code and documentation explains how to "import" AWS security group/s (SG) with their CIDR entries (egress and ingress.)
+Same code can be used to add/update new SG resources as well.
+
+##**Why we need to import security groups?**
+Lot of security groups in AWS may have been created using Clickops. it makes more sense to stop using clickops and bring these resources under Terraform control. 
+Terragrunt is wrapper around Terraform and provides many added benefits over Terraform. (Terraform state management and keeping the module code DRY [Do not Repeat Yourself].)
+Terragrunt can be invoked to bring the SGs under Terraform control and use Terragrunt going forward to manage all SG related operations. (SG CRUD and CIDR CRUD operations.)
 
 ##**Scenario below:**
-We will import 2 security groups and its connected CIDR egress/ingress rules under terragrunt control. Once imported, we will also update the CIDR rules in the existing security groups, modify other attributes.  After that, we will also add new security groups and rules using Terragrunt. No more clickops.
-If someone created more security groups again, use the same process to import back to Terragrunt.
+We will import two existing AWS security groups and its corresponding CIDR egress/ingress rules under Terraform control. Once imported, we will perform CRUD operations on SG and CIDRs. 
+Based on how it goes, you can decide to import over SG's and CIDRs in some batches under Terraform control. Stop using Clickops and always use the Terraform input fields to manage the resources.
 
 
-#**STORY 1**
 ##**Importing security groups and CIDR rules.**
 
 Use a desktop or an ec2 instance where Terragrunt/terraform is installed.  I use an AWS Amazon linux instance.  It has permission to manage resources from my personal AWS account using AWS IAM role. This setup detail is not covered here.
+We will import two SGs/CIDRs from AWS us-east-1 region.
 
 ```
 [root@ip-172-30-2-182 sg3]# terragrunt --version
@@ -22,8 +26,8 @@ Terraform v1.11.0
 on linux_amd64
 ```
 
-Terragrunt uses one atomic directory and only one terragrunt.hcl in it to mange the resources. Actual public module will be stored in the ./modules folder.  We are not covering the terragrunt layout details here.
-In this case, we have sg3 folder and ./terragrunt.hcl file in it.
+All we need for Terragrunt is use one atomic directory and only one terragrunt.hcl in it to mange the resources. Actual public module will be stored in the ./modules folder.  We are not covering the terragrunt layout details here.
+In this case, we have folder named "sg3" (can be anything.) and ./terragrunt.hcl file in it.
 
 ```
 [root@ip-172-30-2-182 sg2]# cat sg3/terrgrunt.hcl
