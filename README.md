@@ -405,7 +405,42 @@ Note:  it is always required to enter the "default" value for the variable for c
 >var.secgroup.security_groups[1]
 ```
 
-**Credits**:
-My friends at Hertz Corp and Kranthi Gamini.
+Example for "for" loop
+```
+[root@ip-172-30-2-182 console]# cat test1.tf
+variable "secgroup" {
+  description = "security group"
+  type = object({
+    security_groups = list(object({
+      sg1 = string
+      sg2 = string
+    }))
+  })
+
+default = {
+      security_groups = [
+        {
+        sg1 = "sg-1111111"
+        },
+        {
+        sg2 = "sg-2222222"
+        }
+      ]
+}
+
+}
+```
+Parsing with for and if condition:
+
+```
+>[ for i,v in var.secgroup.security_groups : [ for i in v : i if i == "sg-1111111" ] ]
+[
+  [
+    "sg-1111111",
+  ],
+]
+
+```
+
 
 
