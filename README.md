@@ -449,6 +449,7 @@ When Terragrunt (folder that holds the terragrunt.hcl) or terraform folders (fol
 1. Renaming the terragrunt folder.
 
 Example:  If a folder named sg_new/  needs to be renamed to sg/
+P.S:  If you rename without copying the state file, new folder will complain that there is "No State file was found!". This is disaster situation and so you must save the state first before "any" renaming.
 
 ```
 cd sg_new
