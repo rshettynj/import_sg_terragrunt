@@ -531,4 +531,5 @@ Successfully moved 1 object(s).
    
   Same as scenario 2. No changes needed except updating new module path in the terragrunt.hcl file.
 
-
+5. Move terragrung.hcl partially.  (WIP)
+   https://www.maxivanov.io/how-to-move-resources-and-modules-in-terragrunt/
