@@ -442,5 +442,32 @@ Parsing with for and if condition:
 
 ```
 
+##Terragrunt moving around folders and state file changes.
+
+When Terragrunt (folder that holds the terragrunt.hcl) or terraform folders (folders that holds the modules.) need to be moved around or renamed, follow the below process.
+
+1. Renaming the terragrunt folder.
+
+Example:  If a folder named sg_new/  needs to be renamed to sg/
+
+```
+cd sg_new
+terrgrunt state pull >/tmp/sg_new.state
+
+#With below command, note down the resources status.  This is to make sure after rename, you do not see any surprise changes in the plan, if there is difference, something else is wrong.
+terragrunt plan
+
+
+cd ..; mv sg_new sg
+terragrunt state push /tmp/sg_new.state
+
+#Make sure previous terragrunt plan results match !
+terragrunt plan
+
+```
+run terragrunt plan (if needed run terragrunt init) and you should not see any difference in the plan before and after the rename.
+
+2. Renaming the module folder.
+   
 
 
