@@ -529,6 +529,6 @@ Successfully moved 1 object(s).
 
 4. Moving the module folder to a different location.  (example:  from ./modules/sg_new_one  to ./modules/new_folder/sub_folder/sg_new_one )
    
-  
+  Same as scenario 2. No changes needed except updating new module path in the terragrunt.hcl file.
 
 
