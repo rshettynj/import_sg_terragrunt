@@ -469,6 +469,66 @@ terragrunt plan
 run terragrunt plan (if needed run terragrunt init) and you should not see any difference in the plan before and after the rename.
 
 2. Renaming the module folder.
+   If a module folder needs to be renamed, no changes needed with state file.
+   Just change the module location in the terragrunt.hcl to the new folder and run "terragrunt plan".  You should not see any changes reported.
+
+3. Renaming or changing the "resource name" in the module.
+If you need to change the "resource name" in the resources definitions for any reasons, it requires the state change.
+example:
+original resource definition:
+resource "aws_vpc_security_group_ingress_rule" "ing" {
+  #for_each = { for i, v in local.myingress : i => v }
+  #for_each = { for ip in local.myingress : "${ip.ip}${ip.from_port}${ip.ip_protocol}" => ip }
+  #for_each = { for ip in local.myingress : "${ip.cidr_ipv4}${ip.description}${ip.from_port}${ip.ip_protocol}${ip.to_port}" => ip }
+
+  cidr_ipv4                    = "0.0.0.0/0"
+  #description                  = "2021-10-01T02:18:52.277Z"
+  from_port                    = 80
+  ip_protocol                  = "-1"
+  security_group_id            = "sg-0db0bd527e86a7132"
+  to_port                      = 80
+}
+
+change to:
+resource "aws_vpc_security_group_ingress_rule" "ing_rules" {
+  #for_each = { for i, v in local.myingress : i => v }
+  #for_each = { for ip in local.myingress : "${ip.ip}${ip.from_port}${ip.ip_protocol}" => ip }
+  #for_each = { for ip in local.myingress : "${ip.cidr_ipv4}${ip.description}${ip.from_port}${ip.ip_protocol}${ip.to_port}" => ip }
+
+  cidr_ipv4                    = "0.0.0.0/0"
+  #description                  = "2021-10-01T02:18:52.277Z"
+  from_port                    = 80
+  ip_protocol                  = "-1"
+  security_group_id            = "sg-0db0bd527e86a7132"
+  to_port                      = 80
+}
+
    
+  NOTE: resource changed from name "ing" to "ing_rules".   This type of change requires state file modification using "terragrunt state mv" commands.
+
+  terragrunt state pull >/tmp/1   #Save the state first before anything else.
+
+  ```
+  [root@ip-172-30-2-182 sg_new_one]# terragrunt state list
+aws_security_group.this_sg-0db0bd527e86a7132
+aws_vpc_security_group_egress_rule.egr
+aws_vpc_security_group_ingress_rule.ing
+```
+
+since the resource name shows "ing" for aws_vpc_security_group_ingress_rule.ing  run a "state move" command to move the state.
+
+```
+[root@ip-172-30-2-182 sg_new_one]# terragrunt state mv aws_vpc_security_group_ingress_rule.ing aws_vpc_security_group_ingress_rule.ing_rules
+Move "aws_vpc_security_group_ingress_rule.ing" to "aws_vpc_security_group_ingress_rule.ing_rules"
+Successfully moved 1 object(s).
+
+[root@ip-172-30-2-182 sg_new_one]# terragrunt state mv aws_vpc_security_group_egress_rule.egr aws_vpc_security_group_egress_rule.egr_rules
+Move "aws_vpc_security_group_egress_rule.egr" to "aws_vpc_security_group_egress_rule.egr_rules"
+Successfully moved 1 object(s).
+```
+
+4. Moving the module folder to a different location.  (example:  from ./modules/sg_new_one  to ./modules/new_folder/sub_folder/sg_new_one )
+   
+  
 
 
