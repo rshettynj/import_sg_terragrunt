@@ -19,6 +19,40 @@ Based on how it goes, you can decide to import over SG's and CIDRs in some batch
 Use a desktop or an ec2 instance where Terragrunt/terraform is installed.  I use an AWS Amazon linux instance.  It has permission to manage resources from my personal AWS account using AWS IAM role. This setup detail is not covered here.
 We will import two SGs/CIDRs from AWS us-east-1 region.
 
+##Install Terraform and Terragrunt on your ec2 instance.
+terraform update to latest: 
+```
+sudo yum install -y yum-utils shadow-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum -y install terraform
+```
+
+if already installed, just run:
+```
+sudo yum -y update terraform
+```
+
+
+Terragrunt update:
+```
+[root@ip-172-30-2-182 ec2-user]# terragrunt --version
+terragrunt version v0.75.4
+```
+
+
+Download (wget) latest at https://github.com/gruntwork-io/terragrunt/releases
+In the page look for "Assets" section and download the one you need. For AWS Linux it is: terragrunt_linux_amd64
+
+```
+cd /usr/bin
+mv terragrunt terragrunt.old
+wget https://github.com/gruntwork-io/terragrunt/releases/download/v0.77.20/terragrunt_linux_amd64
+mv terragrunt_linux_amd64 terragrunt
+chmod +x terragrunt
+```
+terragrunt --version now should show the v0.77.20 version!
+
+
 ```
 [root@ip-172-30-2-182 sg3]# terragrunt --version
 terragrunt version v0.75.4
